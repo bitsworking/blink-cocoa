@@ -399,6 +399,14 @@ class ChatWindowController(NSWindowController):
             self.participantMenu.itemWithTag_(SessionController.PARTICIPANTS_MENU_START_CHAT_SESSION).setEnabled_(True if contact.uri != own_uri else False)
             self.participantMenu.itemWithTag_(SessionController.PARTICIPANTS_MENU_START_VIDEO_SESSION).setEnabled_(False)
             self.participantMenu.itemWithTag_(SessionController.PARTICIPANTS_MENU_SEND_FILES).setEnabled_(True if contact.uri != own_uri else False)
+ 
+    def canGoToConferenceWebsite(self):
+        session = self.selectedSession()
+        if session.conference_info is not None:
+            conf_desc = session.conference_info.conference_description
+            if hasattr(conf_desc.service_uris, "web-site") and conf_desc.service_uris.web-site:
+               return True
+        return False
 
 
     def menuWillOpen_(self, menu):
@@ -750,6 +758,9 @@ class ChatWindowController(NSWindowController):
                     self.audioStatus.setHidden_(False)
             else:
                 self.audioStatus.setHidden_(True)
+
+            self.participantMenu.itemWithTag_(SessionController.PARTICIPANTS_MENU_INVITE_TO_CONFERENCE).setEnabled_(False if isinstance(session.account, BonjourAccount) else True)
+            self.participantMenu.itemWithTag_(SessionController.PARTICIPANTS_MENU_GOTO_CONFERENCE_WEBSITE).setEnabled_(True if self.canGoToConferenceWebsite() else False)
 
             if not self.participants:
                 # hide the drawer if everyone left
