@@ -2124,6 +2124,9 @@ class ContactWindowController(NSWindowController):
         self.window().makeKeyWindow()
 
         if self.mainTabView.selectedTabViewItem().identifier() == "dialpad":
+            if not isinstance(self.window().firstResponder(), AudioSession):
+                self.window().makeFirstResponder_(self.searchBox)
+
             self.searchBox.cell().setPlaceholderString_("Enter Phone Number")
             self.searchBox.setToolTip_(u'You may type digits or letters, letters will automatically be translated into digits. Press enter or click # on the dialpad to start the call')
 
