@@ -2125,6 +2125,7 @@ class ContactWindowController(NSWindowController):
 
         if self.mainTabView.selectedTabViewItem().identifier() == "dialpad":
             self.searchBox.cell().setPlaceholderString_("Enter Phone Number")
+            self.searchBox.setToolTip_(u'You may type digits or letters, letters will automatically be translated into digits. Press enter or click # on the dialpad to start the call')
 
             if not isinstance(self.window().firstResponder(), AudioSession):
                 self.window().makeFirstResponder_(self.searchBox)
@@ -2144,6 +2145,8 @@ class ContactWindowController(NSWindowController):
 
         else:
             self.searchBox.cell().setPlaceholderString_("Search Contacts or Enter Address")
+            self.searchBox.setToolTip_(u'You may type text to search for contacts or press enter to start a call to an arbitrary address or phone number')
+
             frame.size.height = 132
             self.window().setContentMinSize_(frame.size)
 
