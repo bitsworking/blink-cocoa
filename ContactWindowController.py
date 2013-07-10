@@ -366,6 +366,7 @@ class ContactWindowController(NSWindowController):
         nc.add_observer(self, name="BlinkConferenceGotUpdate")
         nc.add_observer(self, name="BlinkContactsHaveChanged")
         nc.add_observer(self, name="BlinkMuteChangedState")
+        nc.add_observer(self, name="BlinkShouldTerminate")
         nc.add_observer(self, name="BlinkSessionChangedState")
         nc.add_observer(self, name="BlinkContactBecameAvailable")
         nc.add_observer(self, name="BlinkStreamHandlersChanged")
@@ -1153,7 +1154,6 @@ class ContactWindowController(NSWindowController):
 
         self.audioLevelTimer.invalidate()
         self.conference_timer.invalidate()
-        self.refresh_contacts_timer.invalidate()
 
     def _NH_SIPApplicationWillStart(self, notification):
         self.alertPanel = AlertPanel.alloc().init()
@@ -1178,6 +1178,11 @@ class ContactWindowController(NSWindowController):
         self.setSelectedInputAudioDeviceForLevelMeter()
         self.updateAudioDeviceLabel()
         self.removePresenceContactForOurselves()
+
+    def _NH_BlinkShouldTerminate(self, notification):
+        NotificationCenter().remove_observer(self, name="BlinkContactsHaveChanged")
+        self.refresh_contacts_counter = 0
+        self.refresh_contacts_timer.invalidate()
 
     def _NH_BlinkMuteChangedState(self, notification):
         if self.backend.is_muted():
