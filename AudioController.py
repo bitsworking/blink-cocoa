@@ -933,9 +933,7 @@ class AudioController(MediaStream):
                 self.sessionController.addChatToSession()
             else:
                 chatStream = self.sessionController.streamHandlerOfType("chat")
-                print chatStream
                 if chatStream:
-                    print chatStream.status
                     if chatStream.status != STREAM_CONNECTED:
                         self.sessionController.addChatToSession()
                     else:
